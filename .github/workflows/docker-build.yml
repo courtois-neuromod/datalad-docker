@@ -11,7 +11,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: templateflow/datalad
+  IMAGE_NAME: courtois-neuromod/datalad
 
 jobs:
   build-and-push-image:
@@ -29,7 +29,7 @@ jobs:
         with:
           registry: ${{ env.REGISTRY }}
           username: cneuromod-bot
-          password: ${{ secrets.NIPREPS_BOT_PACKAGES }}
+          password: ${{ secrets.CNEUROMOD_BOT_REGISTRY_TOKEN }}
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
