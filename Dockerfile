@@ -20,13 +20,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-FROM python:3.11-alpine as builder
+FROM python:3.12-alpine AS builder
 
-RUN apk update && apk add --no-cache curl bzip2 gcc libffi-dev musl-dev
+RUN apk add --no-cache curl bzip2 gcc libffi-dev musl-dev
+RUN pip install --no-cache-dir virtualenv
+RUN virtualenv /opt/venv && source /opt/venv/bin/activate && \
+  python -m pip install --no-cache-dir datalad pytest ssh_agent_setup && \
+	python -m pip uninstall -y pip # save 10MB
 
-RUN python -m pip install --no-cache-dir datalad pytest ssh_agent_setup
+FROM python:3.12-alpine
+RUN apk add --no-cache git openssh-client git-annex
+COPY --from=builder /opt/venv /opt/venv
 
-FROM python:3.11-alpine
-COPY --from=builder /usr/local /usr/local
-
-RUN apk update && apk add --no-cache git openssh-client git-annex
+ENV PATH=$PATH:/opt/venv/bin
