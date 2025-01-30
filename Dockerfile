@@ -25,8 +25,7 @@ FROM python:3.12-alpine AS builder
 RUN apk add --no-cache curl bzip2 gcc libffi-dev musl-dev
 RUN pip install --no-cache-dir virtualenv
 RUN virtualenv /opt/venv && source /opt/venv/bin/activate && \
-  python -m pip install --no-cache-dir datalad pytest ssh_agent_setup && \
-	python -m pip uninstall -y pip # save 10MB
+  python -m pip install --no-cache-dir datalad pytest ssh_agent_setup
 
 FROM python:3.12-alpine
 RUN apk add --no-cache git openssh-client git-annex
