@@ -22,13 +22,12 @@
 
 FROM python:3.12-alpine AS builder
 
-RUN apk add --no-cache curl bzip2 gcc libffi-dev musl-dev
-RUN pip install --no-cache-dir virtualenv
+RUN apk add --no-cache curl bzip2 gcc libffi-dev musl-dev py3-virtualenv
 RUN virtualenv /opt/venv && source /opt/venv/bin/activate && \
-  python -m pip install  --no-cache-dir datalad pytest ssh_agent_setup
+  pip install --no-cache-dir datalad pytest ssh_agent_setup
 
 FROM python:3.12-alpine
-RUN apk add --no-cache git openssh-client git-annex
+RUN apk add --no-cache git openssh-client git-annex py3-virtualenv
 COPY --from=builder /opt/venv /opt/venv
 
 ENV PATH=$PATH:/opt/venv/bin
