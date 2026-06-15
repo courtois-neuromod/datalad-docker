@@ -20,13 +20,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-FROM python:3.12-alpine AS builder
+FROM python:3.14-alpine AS builder
 
 RUN apk add --no-cache curl bzip2 gcc libffi-dev musl-dev py3-virtualenv
 RUN virtualenv /opt/venv && source /opt/venv/bin/activate && \
   pip install --no-cache-dir datalad pytest ssh_agent_setup
 
-FROM python:3.12-alpine
+FROM python:3.14-alpine
 RUN apk add --no-cache git openssh-client git-annex py3-virtualenv
 COPY --from=builder /opt/venv /opt/venv
 
